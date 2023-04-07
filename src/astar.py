@@ -1,7 +1,7 @@
 from heapq import heappush, heappop
 from dataclasses import dataclass, field
 from typing import Any
-from copy import deepcopy
+from ucs import ucs
 
 @dataclass(order=True)
 class PrioritizedItem:
@@ -9,30 +9,16 @@ class PrioritizedItem:
     node: Any=field(compare=False)
     path: Any=field(compare=False)
 
-def unweigh(graph):
-    copy = deepcopy(graph)
-    for i in range(len(graph)):
-        for j in range(len(graph)):
-            if graph[i][j] != 0:
-                copy[i][j] = 1
-    return copy
-
-def heuristic(adj_matrix, dest_vertex):
-    n = len(adj_matrix)
-    distances = [[float('inf') if adj_matrix[i][j] == 0 else adj_matrix[i][j] for j in range(n)] for i in range(n)]
-    distances[dest_vertex][dest_vertex] = 0
-    
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-                if distances[i][j] > distances[i][k] + distances[k][j]:
-                    distances[i][j] = distances[i][k] + distances[k][j]
-    
-    return [distances[i][dest_vertex] for i in range(n)]
+def heuristic(graph, dest, name):
+    h = [0] * len(graph)
+    for node in range(len(graph)):
+        iteration, cost, path = ucs(graph, node, dest, name)
+        h[node] = cost
+    return h
 
 def astar(graph, start, dest, name):
-    unweighted = unweigh(graph)
-    h = heuristic(unweighted, dest)
+    h = heuristic(graph, dest, name)
+    print(f"Heuristic Function: {h}")
     iteration = 0
     visited = set()
     queue = [PrioritizedItem(0, start, [])]
@@ -42,8 +28,8 @@ def astar(graph, start, dest, name):
         cost = item.cost
         node = item.node
         path = item.path
-        print(f"current iteration: {iteration}")
-        print(f"current state: cost = {cost}, node = {name[node]}, path = {path}")
+        # print(f"current iteration: {iteration}")
+        # print(f"current state: cost = {cost}, node = {name[node]}, path = {path}")
         if node not in visited:
             visited.add(node)
             path = path + [name[node]]

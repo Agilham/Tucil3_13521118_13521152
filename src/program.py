@@ -1,38 +1,28 @@
 from ucs import ucs
-from astar import astar
-from json import loads
+from astar import astar, heuristic
+import timeit
 
 def program():
     # Open the text file and read its contents
-    name = ["Arad", "Bucharest", "Craiova", "Dobreta", "Eforie", "Fagaras", "Giurgiu", "Hirsowa", "Iasi", "Lugoj", "Mehadia", 
-            "Neamt", "Oradea", "Pitesti", "Rimnicu Vilcea", "Sibiu", "Timisoara", "Urziceni", "Vaslui", "Zerind"]
-    graph = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 140, 118, 0, 0, 75],
-             [0, 0, 0, 0, 0, 211, 90, 0, 0, 0, 0, 0, 0, 101, 0, 0, 0, 85, 0, 0],
-             [0, 0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 138, 146, 0, 0, 0, 0, 0],
-             [0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 211, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0],
-             [0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 92, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 111, 0, 0, 0],
-             [0, 0, 0, 75, 0, 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 151, 0, 0, 0, 71],
-             [0, 101, 138, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 0, 0, 0, 0, 0],
-             [0, 0, 146, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 0, 80, 0, 0, 0, 0],
-             [140, 0, 0, 0, 0, 99, 0, 0, 0, 0, 0, 0, 151, 0, 80, 0, 0, 0, 0, 0],
-             [118, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             [0, 85, 0, 0, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 142, 0],
-             [0, 0, 0, 0, 0, 0, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 142, 0, 0],
-             [75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0]]
+    name = ["A", "B", "C", "D", "E", "F"]
+    graph = [[0, 2, 4, 0, 5, 0],
+             [2, 0, 0, 0, 1, 0],
+             [4, 0, 0, 3, 0, 0],
+             [0, 0, 3, 0, 3, 1],
+             [5, 1, 0, 3, 0, 2],
+             [0, 0, 0, 1, 2, 0]]
 
     print("Using UCS:")
-    iteration, cost, path = ucs(graph, 0, 1, name)
+    iteration, cost, path = ucs(graph, 0, 5, name)
+    ucs_time = timeit.timeit(lambda: ucs(graph, 0, 1, name), number=1000) * 1000
     print(f"final iteration: {iteration}")
     print(f"final state: cost={cost}, path={path}")
-
+    print(f"elapsed time: {ucs_time} miliseconds")
+    
     print("\nUsing A*:")
-    iteration, cost, path = astar(graph, 0, 1, name)
+    h = heuristic(graph, 5, name)
+    iteration, cost, path = astar(graph, 0, 5, name, h)
+    astar_time = timeit.timeit(lambda: astar(graph, 0, 5, name, h), number=1000) * 1000
     print(f"final iteration: {iteration}")
     print(f"final state: cost = {cost}, path = {path}")
+    print(f"elapsed time: {astar_time} miliseconds")

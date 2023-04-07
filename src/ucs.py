@@ -18,8 +18,8 @@ def ucs(graph, start, dest, name):
         cost = item.cost
         node = item.node
         path = item.path
-        print(f"current iteration: {iteration}")
-        print(f"current state: cost = {cost}, node = {name[node]}, path = {path}")
+        # print(f"current iteration: {iteration}")
+        # print(f"current state: cost = {cost}, node = {name[node]}, path = {path}")
         if node not in visited:
             visited.add(node)
             path = path + [name[node]]

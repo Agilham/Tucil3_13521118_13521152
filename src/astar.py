@@ -16,9 +16,7 @@ def heuristic(graph, dest, name):
         h[node] = cost
     return h
 
-def astar(graph, start, dest, name):
-    h = heuristic(graph, dest, name)
-    print(f"Heuristic Function: {h}")
+def astar(graph, start, dest, name, heuristic):
     iteration = 0
     visited = set()
     queue = [PrioritizedItem(0, start, [])]
@@ -36,9 +34,9 @@ def astar(graph, start, dest, name):
             if node == dest:
                 return (iteration, cost, path)
             if (node != start):
-                cost -= h[node]
+                cost -= heuristic[node]
             for neighbor in range(len(graph[node])):
                 if graph[node][neighbor] != 0 and neighbor not in visited:
-                    actual_cost = cost + graph[node][neighbor] + h[neighbor]
+                    actual_cost = cost + graph[node][neighbor] + heuristic[neighbor]
                     heappush(queue, PrioritizedItem(actual_cost, neighbor, path))
     return float("inf")

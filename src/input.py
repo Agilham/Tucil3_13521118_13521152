@@ -1,46 +1,42 @@
 import os
 
 def inputFile():
-    # Opening input file
-    filename = input("Masukkan nama file input: ")
-    filePath = os.path.join('..\\Tucil3_13521118_13521152\\test', filename)
-    with open(filePath, 'r') as f:
-        # Reading the name of nodes
-        line = f.readline()
-        name = [str(x) for x in line.strip().split(', ')]
-        # Get the number of nodes
-        size = len(name)
-        # Check if the number of nodes is at least 8
-        if size >= 8:
-            # Reading the adjacency matrix
-            matrix = []
-            for i in range(size):
+    while True:
+        # opening input file
+        filename = input("Masukkan nama file input: ")
+        filepath = os.path.join('..\\Tucil3_13521118_13521152\\test', filename)
+        
+        try:
+            with open(filepath, 'r') as f:
+                # reading the name of nodes
                 line = f.readline()
-                row = [int(x) for x in line.strip().split()]
-                rowLength = len(row)
-                if(rowLength != size):
-                    print("Matriks ketetanggaan tidak valid")
-                    inputFile()
-                    break
-                for rows in row:
-                    if(rows < 0):
-                        print("Elemen matriks ketetanggaan tidak valid")
-                        inputFile()
-                        break
-                matrix.append(row)
-            print("\nDaftar simpul:")
-            print(" ".join(name))
-            # Print the adjacency matrix
-            print("\nMatriks ketetanggaan:")
-            for row in matrix:
-                print(row)
-            # Return the name of nodes and the adjacency matrix
-            return name, matrix
-        else:
-            # If the number of nodes is less than 8, ask for another file
-            print("Silahkan masukkan file dengan setidaknya 8 simpul")
-            # Call the function again
-            inputFile()
+                name = [str(x) for x in line.strip().split(', ')]
+                # get the number of nodes
+                size = len(name)
+                # check if the number of nodes is at least 8
+                if size < 8:
+                    raise ValueError("File tidak memiliki setidaknya 8 simpul.")
+                
+                # reading the adjacency matrix
+                matrix = []
+                for i in range(size):
+                    line = f.readline()
+                    row = [int(x) for x in line.strip().split()]
+                    # check if row length is valid
+                    if len(row) != size:
+                        raise ValueError("Matriks ketetanggaan tidak valid.")
+                    # check if all elements are non-negative
+                    if any(element < 0 for element in row):
+                        raise ValueError("Elemen matriks ketetanggaan tidak valid.")
+                    matrix.append(row)
+                # if everything is valid, return the name and matrix
+                return name, matrix
+
+        except (FileNotFoundError, ValueError) as e:
+            print(f"Error: {e}")
+            continue
+
+        
 
 def inputRequest(name : list):
     print("\nDaftar simpul valid:")

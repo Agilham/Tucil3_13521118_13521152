@@ -1,5 +1,8 @@
 import os
+import numpy as np
+from scipy.linalg import issymmetric
 
+# function to get input file from the user
 def inputFile():
     while True:
         # opening input file
@@ -33,19 +36,23 @@ def inputFile():
                         matrix.append(row)
                     except ValueError:
                         raise ValueError("File contains non-integer elements.")
-                # if everything is valid, return the name and matrix
+                # check if the matrix is symmetric
+                copy = np.array(matrix)
+                if not issymmetric(copy):
+                    raise ValueError("The adjacency matrix is not symmetric.")
+                # if the matrix is valid, return the name and matrix
                 return name, matrix
-
         except (FileNotFoundError, ValueError) as e:
             print(f"Error: {e}")
             continue
 
-
+# function to get input node from the user
 def inputRequest(name: list):
     print("-----------------------------")
     print("List of valid nodes :")
     for i in range(len(name)):
         print(f"{i+1}. {name[i]}")
+    # get the starting node
     while True:
         try:
             inputNode = int(input("Choose the starting node : "))
@@ -63,6 +70,7 @@ def inputRequest(name: list):
             print(f"{i+1}. {name[i]}")
         elif i > startNode:
             print(f"{i}. {name[i]}")
+    # get the destination node
     while True:
         try:
             inputNode = int(input("Choose the destination node : "))
@@ -76,4 +84,5 @@ def inputRequest(name: list):
             break
         except ValueError:
             print("Enter a valid integer")
+    # if the input is valid, return the starting and destination node
     return startNode, endNode

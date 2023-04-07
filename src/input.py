@@ -7,7 +7,7 @@ def inputFile():
     with open(filePath, 'r') as f:
         # Reading the name of nodes
         line = f.readline()
-        name = [str(x) for x in line.strip().split()]
+        name = [str(x) for x in line.strip().split(', ')]
         # Get the number of nodes
         size = len(name)
         # Check if the number of nodes is at least 8

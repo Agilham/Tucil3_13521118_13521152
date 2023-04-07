@@ -14,7 +14,7 @@ def program():
     iteration, cost, path = ucs(graph, start, end, name)
     ucs_time = timeit.timeit(lambda: ucs(graph, start, end, name), number=1) * 1000
     print(f"iteration count: {iteration}")
-    print(f"cost = {cost}, path = {path}")
+    print(f"cost: {cost}, path: {path}")
     print(f"elapsed time: {ucs_time} miliseconds")
     
     print("\nUsing A*:")

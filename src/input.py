@@ -11,7 +11,7 @@ def inputFile():
         # Get the number of nodes
         size = len(name)
         # Check if the number of nodes is at least 8
-        if size >= 0:
+        if size >= 8:
             # Reading the adjacency matrix
             matrix = []
             for i in range(size):
@@ -67,8 +67,3 @@ def inputRequest(name : list):
     else:
         endNode = inputNode
     return startNode, endNode
-
-name, matrix = inputFile()
-startNode, endNode = inputRequest(name)
-print(f"\nSimpul awal: {name[startNode]}")
-print(f"Simpul tujuan: {name[endNode]}")

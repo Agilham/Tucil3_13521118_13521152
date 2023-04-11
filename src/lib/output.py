@@ -1,6 +1,10 @@
 import networkx as nx
+import folium
+import osmnx as ox
+import os
 import matplotlib.pyplot as plt
 
+# Plot the graph and highlight the shortest path
 def plot(graph, name, path):
     # Define the vertex labels
     labels = {k: v for k, v in enumerate(name)}
@@ -22,6 +26,14 @@ def plot(graph, name, path):
     nx.draw_networkx_edges(G, pos, edge_color=edge_colors)
     plt.show()
 
+def map(graph, center, route, algorithm):
+    filename = f'{algorithm}.html'
+    filepath = os.path.join('..\\Tucil3_13521118_13521152\\test', filename)
+    m = folium.Map(location=[center[0], center[1]], zoom_start=12)
+    ox.plot_route_folium(graph, route, route_map=m, line_color='red', line_weight=5)
+    m.save(filepath)
+
+# Print the result of the algorithm
 def result(function, name, start, end, iteration, cost, path, time):
     print(f"-----------------------------")
     print(f"Algorithm: {function}")

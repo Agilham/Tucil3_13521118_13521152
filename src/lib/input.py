@@ -1,6 +1,6 @@
 import os
-import numpy as np
-from scipy.linalg import issymmetric
+import osmnx as ox
+import networkx as nx
 
 # function to get input file from the user
 def inputFile():
@@ -36,18 +36,46 @@ def inputFile():
                         matrix.append(row)
                     except ValueError:
                         raise ValueError("File contains non-integer elements.")
-                # check if the matrix is symmetric
-                copy = np.array(matrix)
-                if not issymmetric(copy):
-                    raise ValueError("The adjacency matrix is not symmetric.")
                 # if the matrix is valid, return the name and matrix
                 return name, matrix
         except (FileNotFoundError, ValueError) as e:
             print(f"Error: {e}")
             continue
 
+def inputMap():
+    print("Range of valid latitude: -90 to 90")
+    lat = float(input('Enter the latitude of the center point: '))
+    print("Range of valid longitude: -180 to 180")
+    lon = float(input('Enter the longitude of the center point: '))
+    center = (lat, lon)
+    radius = int(input('Enter the radius of the area (in meters): '))
+
+    graph = ox.graph_from_point(center, dist=radius, network_type='drive')
+    graph = nx.relabel.convert_node_labels_to_integers(graph)
+
+    coordinates = []
+    node_attributes = graph.nodes.data()
+    for node_id, node_data in node_attributes:
+        y = round(float(node_data['y']), 5)
+        x = round(float(node_data['x']), 5)
+        coordinates.append((y, x))
+
+    min_lat = min(coordinates, key=lambda x: x[0])[0]
+    min_lon = min(coordinates, key=lambda x: x[1])[1]
+    max_lat = max(coordinates, key=lambda x: x[0])[0]
+    max_lon = max(coordinates, key=lambda x: x[1])[1]
+
+    south, west, north, east = ox.utils_geo.bbox_from_point((lat, lon), dist=radius, project_utm=False)
+
+    adj_matrix = nx.to_numpy_array(graph, weight='length')
+    name = []
+    for i in range(len(adj_matrix)):
+        name.append(i)
+
+    return adj_matrix, graph, name, min_lat, min_lon, max_lat, max_lon
+
 # function to get input node from the user
-def inputRequest(name: list):
+def inputNode(name: list):
     print("-----------------------------")
     print("List of valid nodes :")
     for i in range(len(name)):
@@ -86,3 +114,11 @@ def inputRequest(name: list):
             print("Enter a valid integer")
     # if the input is valid, return the starting and destination node
     return startNode, endNode
+
+def inputPoint(graph):
+    lat_0 = float(input('Enter the latitude of the start point: '))
+    lon_0 = float(input('Enter the longitude of the start point: '))
+    lat_1 = float(input('Enter the latitude of the destination point: '))
+    lon_1 = float(input('Enter the longitude of the destination point: '))
+    origin_node = ox.nearest_nodes(graph, lon_0, lat_0)
+    destination_node = ox.nearest_nodes(graph, lon_1, lat_1)

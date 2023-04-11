@@ -1,13 +1,30 @@
 from heapq import heappush, heappop
 from lib.prioitem import PrioritizedItem
 from lib.ucs import ucs
+from math import radians, cos, sqrt
 
-# Calculate the heuristic value for each node
+EARTH_RADIUS = 6371000
+
+# Calculate the heuristic value for each node using UCS
 def heuristic(graph, dest, name):
     h = [0] * len(graph)
     for node in range(len(graph)):
         iteration, cost, path = ucs(graph, node, dest, name)
         h[node] = cost
+    return h
+
+# Calculate the heuristic value for each node using Haversine
+def haversine(adj_matrix, graph, destination_node):
+    h = [0] * len(adj_matrix)
+    dest_lat = radians(graph.nodes[destination_node]['y'])
+    dest_lon = radians(graph.nodes[destination_node]['x'])
+    for u in graph.nodes():
+        lat1 = radians(graph.nodes[u]['y'])
+        lon1 = radians(graph.nodes[u]['x'])
+        x = (lon1 - dest_lon) * cos(0.5 * (lat1 + dest_lat))
+        y = lat1 - dest_lat
+        euclidean_distance = EARTH_RADIUS * sqrt(x * x + y * y)
+        h[u] = euclidean_distance
     return h
 
 # Calculate the shortest path using A*

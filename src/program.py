@@ -1,7 +1,7 @@
-from lib.input import inputFile, inputRequest
-from lib.output import plot, result
+from lib.input import inputFile, inputMap, inputNode, inputPoint
+from lib.output import plot, map, result
 from lib.ucs import ucs
-from lib.astar import astar, heuristic
+from lib.astar import heuristic, haversine, astar
 from timeit import timeit
 
 # Read the input file
@@ -12,7 +12,7 @@ path = []
 plot(graph, name, path)
 
 # Get the start and end node
-start, end = inputRequest(name)
+start, end = inputNode(name)
 
 # Calculate the shortest path using UCS
 ucs_iteration, ucs_cost, ucs_path = ucs(graph, start, end, name)

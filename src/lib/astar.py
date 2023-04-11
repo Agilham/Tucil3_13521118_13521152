@@ -6,10 +6,10 @@ from math import radians, cos, sqrt
 EARTH_RADIUS = 6371000
 
 # Calculate the heuristic value for each node using UCS
-def heuristic(graph, dest, name):
-    h = [0] * len(graph)
-    for node in range(len(graph)):
-        iteration, cost, path = ucs(graph, node, dest, name)
+def heuristic(adj_matrix, dest, name):
+    h = [0] * len(adj_matrix)
+    for node in range(len(adj_matrix)):
+        iteration, cost, path = ucs(adj_matrix, node, dest, name)
         h[node] = cost
     return h
 
@@ -28,7 +28,7 @@ def haversine(adj_matrix, graph, destination_node):
     return h
 
 # Calculate the shortest path using A*
-def astar(graph, start, dest, name, heuristic):
+def astar(adj_matrix, start, dest, name, heuristic):
     iteration = 0
     visited = set()
     queue = [PrioritizedItem(0, start, [])]
@@ -44,10 +44,10 @@ def astar(graph, start, dest, name, heuristic):
                 return (iteration, cost, path)
             if (node != start):
                 cost -= heuristic[node]
-            for neighbor in range(len(graph[node])):
-                if graph[node][neighbor] != 0 and neighbor not in visited:
+            for neighbor in range(len(adj_matrix[node])):
+                if adj_matrix[node][neighbor] != 0 and neighbor not in visited:
                     # Calculate the actual cost f(n) = g(n) + h(n)
-                    actual_cost = cost + graph[node][neighbor] + heuristic[neighbor]
+                    actual_cost = cost + adj_matrix[node][neighbor] + heuristic[neighbor]
                     heappush(queue, PrioritizedItem(actual_cost, neighbor, path))
     # if no path is found, return the iteration count, infinity, and empty path
     return (iteration, float("inf"), [])

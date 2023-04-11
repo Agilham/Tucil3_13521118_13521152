@@ -4,21 +4,21 @@ from lib.ucs import ucs
 from lib.astar import heuristic, haversine, astar
 from timeit import timeit
 
-# Using inputFile
-# Read the input file
-# name, adj_matrix = inputFile()
-
-# Plot the graph
-# path = []
-# plot(adj_matrix, name, path)
-
-# Get the start and end node
-# start, end = inputNode(name)
-
-# Using inputMap
 isFile = False
-center, radius, graph, name, adj_matrix, bbox = inputMap()
-start, end = inputPoint(graph, bbox)
+
+if (isFile):
+    # Read the input file
+    name, adj_matrix = inputFile()
+    # Plot the graph
+    path = []
+    plot(adj_matrix, name, path)
+    # Get the start and end node
+    start, end = inputNode(name)
+else:
+    # Read the map coordinates
+    center, radius, graph, name, adj_matrix, bbox = inputMap()
+    # Get the start and end point
+    start, end = inputPoint(graph, bbox)
 
 # Calculate the shortest path using UCS
 ucs_iteration, ucs_cost, ucs_path = ucs(adj_matrix, start, end, name)
@@ -30,8 +30,10 @@ else:
     map(graph, center, ucs_path, "UCS")
 
 # Calculate the shortest path using A*
-# hfunc = heuristic(adj_matrix, end, name)
-hfunc = haversine(adj_matrix, graph, end)
+if (isFile):
+    hfunc = heuristic(adj_matrix, end, name)
+else:
+    hfunc = haversine(adj_matrix, graph, end)
 astar_iteration, astar_cost, astar_path = astar(adj_matrix, start, end, name, hfunc)
 astar_time = timeit(lambda: astar(adj_matrix, start, end, name, hfunc), number=1) * 1000
 result("A*", name, start, end, astar_iteration, astar_cost, astar_path, astar_time)

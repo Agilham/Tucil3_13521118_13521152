@@ -43,37 +43,32 @@ def inputFile():
             continue
 
 def inputMap():
+    # get the center point  the area
     print("Range of valid latitude: -90 to 90")
     lat = float(input('Enter the latitude of the center point: '))
     print("Range of valid longitude: -180 to 180")
     lon = float(input('Enter the longitude of the center point: '))
     center = (lat, lon)
 
+    # get the radius of the area
     print("Range of valid radius: 500 to 5000")
     radius = int(input('Enter the radius of the area (in meters): '))
 
+    # make a graph from the center point and radius
     graph = ox.graph_from_point(center, dist=radius, network_type='drive')
     graph = nx.relabel.convert_node_labels_to_integers(graph)
 
+    # get the name of the nodes
     name = []
     for node in graph.nodes():
         name.append(node)
 
+    # convert graph to adjacency matrix
     adj_matrix = nx.to_numpy_array(graph, weight='length')
+    # get the bounding box of the graph
     bbox = ox.utils_geo.bbox_from_point(center, dist=radius, project_utm=False)
 
-    # coordinates = []
-    # node_attributes = graph.nodes.data()
-    # for node_id, node_data in node_attributes:
-    #     y = round(float(node_data['y']), 5)
-    #     x = round(float(node_data['x']), 5)
-    #     coordinates.append((y, x))
-
-    # min_lat = min(coordinates, key=lambda x: x[0])[0]
-    # min_lon = min(coordinates, key=lambda x: x[1])[1]
-    # max_lat = max(coordinates, key=lambda x: x[0])[0]
-    # max_lon = max(coordinates, key=lambda x: x[1])[1]
-
+    # if all inputs are valid, return the center point, radius, graph, name, adjacency matrix, and bounding box
     return center, radius, graph, name, adj_matrix, bbox
 
 # function to get input node from the user
@@ -118,16 +113,18 @@ def inputNode(name: list):
     return startNode, endNode
 
 def inputPoint(graph, bbox):
+    print("-----------------------------")
     # get the starting point
-    print("Valid latitude range: ", bbox[1], "to", bbox[0])
+    print("Valid latitude range:", bbox[1], "to", bbox[0])
     startLat = float(input('Enter the latitude of the start point: '))
-    print("Valid longitude range: ", bbox[3], "to", bbox[2])
+    print("Valid longitude range:", bbox[3], "to", bbox[2])
     startLon = float(input('Enter the longitude of the start point: '))
 
+    print("-----------------------------")
     # get the destination point
-    print("Valid latitude range: ", bbox[1], "to", bbox[0], "except", startLat)
+    print("Valid latitude range:", bbox[1], "to", bbox[0], "except", startLat)
     endLat = float(input('Enter the latitude of the destination point: '))
-    print("Valid longitude range: ", bbox[3], "to", bbox[2], "except", startLon)
+    print("Valid longitude range:", bbox[3], "to", bbox[2], "except", startLon)
     endLon = float(input('Enter the longitude of the destination point: '))
 
     # define the starting and destination node

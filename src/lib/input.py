@@ -1,6 +1,7 @@
 import os
 import osmnx as ox
 import networkx as nx
+import numbers
 
 # function to get input file from the user
 def inputFile():
@@ -43,16 +44,39 @@ def inputFile():
             continue
 
 def inputMap():
-    # get the center point  the area
-    print("Range of valid latitude: -90 to 90")
-    lat = float(input('Enter the latitude of the center point: '))
-    print("Range of valid longitude: -180 to 180")
-    lon = float(input('Enter the longitude of the center point: '))
+    # get the center point of the area
+    while True:
+        try:
+            lat = float(input('Enter the latitude of the center point: '))
+            if lat < -90 or lat > 90:
+                print("Enter a valid latitude")
+                continue
+            break
+        except ValueError:
+            print("Enter a number for latitude")
+
+    while True:
+        try:
+            lon = float(input('Enter the longitude of the center point: '))
+            if lon < -180 or lon > 180:
+                print("Enter a valid longitude")
+                continue
+            break
+        except ValueError:
+            print("Enter a number for longitude")
+
     center = (lat, lon)
 
     # get the radius of the area
-    print("Range of valid radius: 500 to 5000")
-    radius = int(input('Enter the radius of the area (in meters): '))
+    while True:
+        try:
+            radius = int(input('Enter the radius of the area (in meters): '))
+            if radius < 500 or radius > 5000:
+                print("Enter a valid radius")
+                continue
+            break
+        except ValueError:
+            print("Enter a number for radius (in meters)")
 
     # make a graph from the center point and radius
     graph = ox.graph_from_point(center, dist=radius, network_type='drive')
@@ -116,19 +140,83 @@ def inputPoint(graph, bbox):
     print("-----------------------------")
     # get the starting point
     print("Valid latitude range:", bbox[1], "to", bbox[0])
-    startLat = float(input('Enter the latitude of the start point: '))
+    while True:
+        try:
+            startLat = float(input('Enter the latitude of the start point: '))
+            if not isinstance(startLat, numbers.Number):
+                raise ValueError()
+            if startLat < bbox[1] or startLat > bbox[0]:
+                print("Enter a valid start point latitude")
+            else:
+                break
+        except ValueError:
+            print("Enter a valid number for latitude")
+
     print("Valid longitude range:", bbox[3], "to", bbox[2])
-    startLon = float(input('Enter the longitude of the start point: '))
+    while True:
+        try:
+            startLon = float(input('Enter the longitude of the start point: '))
+            if not isinstance(startLon, numbers.Number):
+                raise ValueError()
+            if startLon < bbox[3] or startLon > bbox[2]:
+                print("Enter a valid start point longitude")
+            else:
+                break
+        except ValueError:
+            print("Enter a valid number for longitude")
 
     print("-----------------------------")
     # get the destination point
     print("Valid latitude range:", bbox[1], "to", bbox[0], "except", startLat)
-    endLat = float(input('Enter the latitude of the destination point: '))
+    while True:
+        try:
+            endLat = float(input('Enter the latitude of the destination point: '))
+            if not isinstance(endLat, numbers.Number):
+                raise ValueError()
+            if endLat < bbox[1] or endLat > bbox[0] or endLat == startLat:
+                print("Enter a valid destination point latitude")
+            else:
+                break
+        except ValueError:
+            print("Enter a valid number for latitude")
+
     print("Valid longitude range:", bbox[3], "to", bbox[2], "except", startLon)
-    endLon = float(input('Enter the longitude of the destination point: '))
+    while True:
+        try:
+            endLon = float(input('Enter the longitude of the destination point: '))
+            if not isinstance(endLon, numbers.Number):
+                raise ValueError()
+            if endLon < bbox[3] or endLon > bbox[2] or endLon == startLon:
+                print("Enter a valid destination point longitude")
+            else:
+                break
+        except ValueError:
+            print("Enter a valid number for longitude")
 
     # define the starting and destination node
     startNode = ox.nearest_nodes(graph, startLon, startLat)
     endNode = ox.nearest_nodes(graph, endLon, endLat)
 
     return startNode, endNode
+
+def inputMethod():
+    while True:
+        print("Input Options:")
+        print("1. File Input")
+        print("2. Map Coordinates Input")
+        choice = input("Choose the input method: ")
+        if choice == "1":
+            isFile = True
+            break
+        elif choice == "2":
+            isFile = False
+            break
+        else:
+            print("Enter a valid input method")
+    return isFile
+inputMethod()
+
+
+
+
+

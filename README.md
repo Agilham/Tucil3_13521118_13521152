@@ -90,10 +90,9 @@ cd Tucil3_13521118_13521152
 ```bash
 python src/program.py
 ```
-4. Ikuti petunjuk input yang diberikan program. Pastikan semua input yang dimasukkan valid
-5. Informasi hasil algoritma (`jarak, iterasi, waktu`) akan ditampilkan pada terminal
-6. Visualisasi graf (metode `input file`) beserta `shortest path` akan muncul sebagai pop up. Selama pop up graf belum ditutup, program akan berhenti berjalan. Pastikan untuk menutup pop up graf agar program kembali berjalan
-7. Visualisasi peta (metode `input koordinat peta`) akan disimpan sebagai file ekstensi `.html` pada folder `test`. Buka file tersebut pada browser untuk melihat peta dan `shortest path` yang dihasilkan 
+4. Ikuti petunjuk input yang diberikan program. Pastikan semua input yang dimasukkan valid. Informasi hasil algoritma (`jarak, iterasi, waktu`) akan ditampilkan pada terminal
+5. Visualisasi graf (metode `input file`) beserta `shortest path` akan muncul sebagai pop up. Selama pop up belum ditutup, program akan berhenti berjalan. Pastikan untuk menutup pop up agar program kembali berjalan
+6. Visualisasi peta (metode `input koordinat peta`) akan disimpan sebagai file ekstensi `.html` pada folder `test`. Buka file tersebut pada browser untuk melihat peta dan `shortest path` yang dihasilkan 
 
 <a name="screenshots"></a>
 
@@ -141,7 +140,7 @@ Project is: _Completed_
 <a name="room-for-improvement">
 
 ## Room for Improvement
-- Menambahkan GUI.
+- Menambahkan GUI
 
 <a name="acknowledgements">
 

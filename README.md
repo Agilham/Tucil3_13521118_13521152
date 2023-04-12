@@ -99,13 +99,13 @@ python src/program.py
 <a name="screenshots"></a>
 
 ## Screenshots
-1. Gambar 1. Contoh Menggunakan File Matriks Ketetanggaan
+  Contoh Menggunakan File Matriks Ketetanggaan
   ![Image description](/img/SS1.png)
-2. Gambar 2. Contoh Hasil Berdasarkan Input File
+  Contoh Hasil Berdasarkan Input File
   ![Image description](/img/SS2.png)
-3. Gambar 3. Contoh Menggunakan Koordinat Peta
+  Contoh Menggunakan Koordinat Peta
   ![Image description](/img/SS3.png)
-4. Gambar 4. Contoh Hasil Berdasarkan Input Koordinat
+  Contoh Hasil Berdasarkan Input Koordinat
   ![Image description](/img/SS4.png)
 
 <a name="structure"></a>

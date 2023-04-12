@@ -63,6 +63,7 @@ def inputFile():
             print(f"Error: {e}")
             continue
 
+# function to get input map from the user
 def inputMap():
     print("-----------------------------")
     valid = False
@@ -166,6 +167,7 @@ def inputNode(name: list):
     # if the input is valid, return the starting and destination node
     return startNode, endNode
 
+# function to get input point from the user
 def inputPoint(graph, bbox):
     print("-----------------------------")
     # get the starting point

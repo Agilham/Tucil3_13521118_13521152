@@ -25,10 +25,13 @@ else:
 ucs_iteration, ucs_cost, ucs_path = ucs(adj_matrix, start, end, name)
 ucs_time = timeit(lambda: ucs(adj_matrix, start, end, name), number=1) * 1000
 result("UCS", name, start, end, ucs_iteration, ucs_cost, ucs_path, ucs_time)
-if (isFile):
-    plot(adj_matrix, name, ucs_path)
+if (len(ucs_path) == 0):
+    print("No path found")
 else:
-    map(graph, center, ucs_path, "UCS")
+    if (isFile):
+        plot(adj_matrix, name, ucs_path)
+    else:
+        map(graph, center, ucs_path, "UCS")
 
 # Calculate the shortest path using A*
 if (isFile):
@@ -38,7 +41,10 @@ else:
 astar_iteration, astar_cost, astar_path = astar(adj_matrix, start, end, name, hfunc)
 astar_time = timeit(lambda: astar(adj_matrix, start, end, name, hfunc), number=1) * 1000
 result("A*", name, start, end, astar_iteration, astar_cost, astar_path, astar_time)
-if (isFile):
-    plot(adj_matrix, name, astar_path)
+if (len(astar_path) == 0):
+    print("No path found")
 else:
-    map(graph, center, astar_path, "A-star")
+    if (isFile):
+        plot(adj_matrix, name, astar_path)
+    else:
+        map(graph, center, astar_path, "A-star")

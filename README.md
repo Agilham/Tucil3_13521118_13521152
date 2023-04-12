@@ -86,15 +86,14 @@ git clone https://github.com/Agilham/Tucil3_13521118_13521152.git
 ```bash
 cd Tucil3_13521118_13521152
 ```
-3. Buat terminal baru pada VSCode
-4. Masukkan perintah berikut:
+3. Buat terminal baru pada VSCode, masukkan perintah berikut:
 ```bash
 python src/program.py
 ```
-5. Ikuti petunjuk input yang diberikan program. Pastikan semua input yang dimasukkan valid
-6. Informasi hasil algoritma (`jarak, iterasi, waktu`) akan ditampilkan pada terminal
-7. Visualisasi graf (metode `input file`) beserta `shortest path` akan muncul sebagai pop up. Selama pop up graf belum ditutup, program akan berhenti berjalan. Pastikan untuk menutup pop up graf agar program kembali berjalan
-8. Visualisasi peta (metode `input koordinat peta`) akan disimpan sebagai file ekstensi `.html` pada folder `test`. Buka file tersebut pada browser untuk melihat peta dan `shortest path` yang dihasilkan 
+4. Ikuti petunjuk input yang diberikan program. Pastikan semua input yang dimasukkan valid
+5. Informasi hasil algoritma (`jarak, iterasi, waktu`) akan ditampilkan pada terminal
+6. Visualisasi graf (metode `input file`) beserta `shortest path` akan muncul sebagai pop up. Selama pop up graf belum ditutup, program akan berhenti berjalan. Pastikan untuk menutup pop up graf agar program kembali berjalan
+7. Visualisasi peta (metode `input koordinat peta`) akan disimpan sebagai file ekstensi `.html` pada folder `test`. Buka file tersebut pada browser untuk melihat peta dan `shortest path` yang dihasilkan 
 
 <a name="screenshots"></a>
 

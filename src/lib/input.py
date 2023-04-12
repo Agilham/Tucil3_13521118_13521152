@@ -3,8 +3,28 @@ import osmnx as ox
 import networkx as nx
 import numbers
 
+# function to get the input method from the user
+def inputMethod():
+    # get the input method
+    print("Valid Input Method:")
+    print("1. File Input")
+    print("2. Map Coordinates Input")
+    while True:
+        choice = input("Choose the input method: ")
+        if choice == "1":
+            isFile = True
+            break
+        elif choice == "2":
+            isFile = False
+            break
+        else:
+            print("Enter a valid input method")
+    # if the input is valid, return the input method
+    return isFile
+
 # function to get input file from the user
 def inputFile():
+    print("-----------------------------")
     while True:
         # opening input file
         filename = input("Enter the name of the input file :\n")
@@ -44,56 +64,66 @@ def inputFile():
             continue
 
 def inputMap():
-    # get the center point of the area
-    while True:
+    print("-----------------------------")
+    valid = False
+    while not valid:
+        # get the center point of the area
+        print("Valid latitude range: -90 to 90 (in degreess)")
+        while True:
+            try:
+                lat = float(input('Enter the latitude of the center point: '))
+                if lat < -90 or lat > 90:
+                    print("Enter a valid latitude")
+                    continue
+                break
+            except ValueError:
+                print("Enter a number (in degrees) for latitude")
+        print("Valid longitude range: -180 to 180 (in degrees)")
+        while True:
+            try:
+                lon = float(input('Enter the longitude of the center point: '))
+                if lon < -180 or lon > 180:
+                    print("Enter a valid longitude")
+                    continue
+                break
+            except ValueError:
+                print("Enter a number (in degrees) for longitude")
+        center = (lat, lon)
+
+        # get the radius of the area
+        print("Valid radius range: 500 to 5000 (in meters)")
+        while True:
+            try:
+                radius = int(input('Enter the radius of the area: '))
+                if radius < 500 or radius > 5000:
+                    print("Enter a valid radius")
+                    continue
+                break
+            except ValueError:
+                print("Enter a number for radius")
+
         try:
-            lat = float(input('Enter the latitude of the center point: '))
-            if lat < -90 or lat > 90:
-                print("Enter a valid latitude")
-                continue
-            break
-        except ValueError:
-            print("Enter a number for latitude")
+            # make a graph from the center point and radius
+            graph = ox.graph_from_point(center, dist=radius, network_type='drive')
+            graph = nx.relabel.convert_node_labels_to_integers(graph)
 
-    while True:
-        try:
-            lon = float(input('Enter the longitude of the center point: '))
-            if lon < -180 or lon > 180:
-                print("Enter a valid longitude")
-                continue
-            break
-        except ValueError:
-            print("Enter a number for longitude")
+            # get the name of the nodes
+            name = []
+            for node in graph.nodes():
+                name.append(node)
 
-    center = (lat, lon)
+            # convert graph to adjacency matrix
+            adj_matrix = nx.to_numpy_array(graph, weight='length')
+            # get the bounding box of the graph
+            bbox = ox.utils_geo.bbox_from_point(center, dist=radius, project_utm=False)
 
-    # get the radius of the area
-    while True:
-        try:
-            radius = int(input('Enter the radius of the area (in meters): '))
-            if radius < 500 or radius > 5000:
-                print("Enter a valid radius")
-                continue
-            break
-        except ValueError:
-            print("Enter a number for radius (in meters)")
-
-    # make a graph from the center point and radius
-    graph = ox.graph_from_point(center, dist=radius, network_type='drive')
-    graph = nx.relabel.convert_node_labels_to_integers(graph)
-
-    # get the name of the nodes
-    name = []
-    for node in graph.nodes():
-        name.append(node)
-
-    # convert graph to adjacency matrix
-    adj_matrix = nx.to_numpy_array(graph, weight='length')
-    # get the bounding box of the graph
-    bbox = ox.utils_geo.bbox_from_point(center, dist=radius, project_utm=False)
-
-    # if all inputs are valid, return the center point, radius, graph, name, adjacency matrix, and bounding box
-    return center, radius, graph, name, adj_matrix, bbox
+            # if all inputs are valid, return the center point, radius, graph, name, adjacency matrix, and bounding box
+            valid = True
+            return center, radius, graph, name, adj_matrix, bbox
+        # if there are no nodes in the graph, print the error and ask for new center point and radius
+        except ValueError as e:
+            print(f"Error: {e}")
+            print("Enter a new center point and radius")
 
 # function to get input node from the user
 def inputNode(name: list):
@@ -111,7 +141,7 @@ def inputNode(name: list):
             startNode = inputNode - 1
             break
         except ValueError:
-            print("Enter a valid integer")
+            print("Enter the number (integer) of the node")
     print("-----------------------------")
     print("List of valid nodes :")
     for i in range(len(name)):
@@ -132,14 +162,14 @@ def inputNode(name: list):
                 endNode = inputNode
             break
         except ValueError:
-            print("Enter a valid integer")
+            print("Enter the number (integer) of the node")
     # if the input is valid, return the starting and destination node
     return startNode, endNode
 
 def inputPoint(graph, bbox):
     print("-----------------------------")
     # get the starting point
-    print("Valid latitude range:", bbox[1], "to", bbox[0])
+    print("Valid latitude range:", bbox[1], "to", bbox[0], "(in degrees)")
     while True:
         try:
             startLat = float(input('Enter the latitude of the start point: '))
@@ -150,9 +180,8 @@ def inputPoint(graph, bbox):
             else:
                 break
         except ValueError:
-            print("Enter a valid number for latitude")
-
-    print("Valid longitude range:", bbox[3], "to", bbox[2])
+            print("Enter a number (in degrees) for latitude")
+    print("Valid longitude range:", bbox[3], "to", bbox[2], "(in degrees)")
     while True:
         try:
             startLon = float(input('Enter the longitude of the start point: '))
@@ -163,60 +192,38 @@ def inputPoint(graph, bbox):
             else:
                 break
         except ValueError:
-            print("Enter a valid number for longitude")
+            print("Enter a number (in degrees) for longitude")
 
     print("-----------------------------")
     # get the destination point
-    print("Valid latitude range:", bbox[1], "to", bbox[0], "except", startLat)
+    print("Valid latitude range:", bbox[1], "to", bbox[0], "(in degrees)")
     while True:
         try:
             endLat = float(input('Enter the latitude of the destination point: '))
             if not isinstance(endLat, numbers.Number):
                 raise ValueError()
-            if endLat < bbox[1] or endLat > bbox[0] or endLat == startLat:
+            if endLat < bbox[1] or endLat > bbox[0]:
                 print("Enter a valid destination point latitude")
             else:
                 break
         except ValueError:
-            print("Enter a valid number for latitude")
-
-    print("Valid longitude range:", bbox[3], "to", bbox[2], "except", startLon)
+            print("Enter a number (in degrees) for latitude")
+    print("Valid longitude range:", bbox[3], "to", bbox[2], "(in degrees)")
     while True:
         try:
             endLon = float(input('Enter the longitude of the destination point: '))
             if not isinstance(endLon, numbers.Number):
                 raise ValueError()
-            if endLon < bbox[3] or endLon > bbox[2] or endLon == startLon:
+            if endLon < bbox[3] or endLon > bbox[2]:
                 print("Enter a valid destination point longitude")
             else:
                 break
         except ValueError:
-            print("Enter a valid number for longitude")
+            print("Enter a number (in degrees) for longitude")
 
     # define the starting and destination node
     startNode = ox.nearest_nodes(graph, startLon, startLat)
     endNode = ox.nearest_nodes(graph, endLon, endLat)
 
+    # if the input is valid, return the starting and destination node
     return startNode, endNode
-
-def inputMethod():
-    while True:
-        print("Input Options:")
-        print("1. File Input")
-        print("2. Map Coordinates Input")
-        choice = input("Choose the input method: ")
-        if choice == "1":
-            isFile = True
-            break
-        elif choice == "2":
-            isFile = False
-            break
-        else:
-            print("Enter a valid input method")
-    return isFile
-inputMethod()
-
-
-
-
-

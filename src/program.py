@@ -1,10 +1,11 @@
-from lib.input import inputFile, inputMap, inputNode, inputPoint
+from lib.input import inputMethod, inputFile, inputMap, inputNode, inputPoint
 from lib.output import plot, map, result
 from lib.ucs import ucs
 from lib.astar import heuristic, haversine, astar
 from timeit import timeit
 
-isFile = False
+# Get the input method
+isFile = inputMethod()
 
 if (isFile):
     # Read the input file
